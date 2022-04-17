@@ -10,8 +10,8 @@ import (
 	"github.com/google/uuid"
 )
 
-type Diary struct {
-	PageID   uuid.UUID `json:"page_id"`
+type Page struct {
+	ID       uuid.UUID `json:"id"`
 	Datetime time.Time `json:"datetime"`
 	Content  string    `json:"content"`
 }

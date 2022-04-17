@@ -11,10 +11,10 @@ import (
 )
 
 type Querier interface {
-	DeletePage(ctx context.Context, pageID uuid.UUID) error
-	InsertPage(ctx context.Context, arg InsertPageParams) (Diary, error)
-	SelectPage(ctx context.Context, pageID uuid.UUID) (Diary, error)
-	SelectPages(ctx context.Context) ([]Diary, error)
+	DeletePage(ctx context.Context, id uuid.UUID) error
+	InsertPage(ctx context.Context, arg InsertPageParams) (Page, error)
+	SelectPage(ctx context.Context, id uuid.UUID) (Page, error)
+	SelectPages(ctx context.Context) ([]Page, error)
 	UpdatePage(ctx context.Context, arg UpdatePageParams) error
 }
 
