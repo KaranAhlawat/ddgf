@@ -1,9 +1,8 @@
 version: "1"
 packages:
   - name: "repo"
-    path: "./gen"
+    path: "gen"
     queries: "./queries"
-    sql_package: "pgx/v4"
     schema: "../../db/migrations/"
     engine: "postgresql"
     emit_json_tags: true
