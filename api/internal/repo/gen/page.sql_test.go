@@ -137,6 +137,21 @@ func (s *Suite) TestSelectPages() {
 	}
 }
 
+func (s *Suite) TestErrNoRows() {
+	query := `-- name: SelectPages :many
+	SELECT id, datetime, content
+	FROM "pages"
+	ORDER BY "datetime"
+	`
+
+	s.mock.ExpectQuery(regexp.QuoteMeta(query)).
+		WillReturnError(sql.ErrNoRows)
+
+	_, err := s.querier.SelectPages(s.ctx)
+
+	require.Error(s.T(), err)
+}
+
 func (s *Suite) TestUpdatePage() {
 	query := `-- name: UpdatePage :exec
 	UPDATE "pages"
