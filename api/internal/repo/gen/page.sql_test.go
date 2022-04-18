@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"regexp"
 	"testing"
 	"time"
@@ -150,6 +151,25 @@ func (s *Suite) TestErrNoRows() {
 	_, err := s.querier.SelectPages(s.ctx)
 
 	require.Error(s.T(), err)
+}
+
+func (s *Suite) TestErrRowError() {
+	query := `-- name: SelectPages :many
+	SELECT id, datetime, content
+	FROM "pages"
+	ORDER BY "datetime"
+	`
+
+	rows := sqlmock.NewRows([]string{"id", "datetime", "content"}).
+		AddRow(s.page.ID, s.page.Datetime, s.page.Content).
+		RowError(0, fmt.Errorf("row error"))
+
+	s.mock.ExpectQuery(regexp.QuoteMeta(query)).
+		WillReturnRows(rows)
+
+	res, err := s.querier.SelectPages(s.ctx)
+	require.Error(s.T(), err)
+	require.Nil(s.T(), res)
 }
 
 func (s *Suite) TestUpdatePage() {
