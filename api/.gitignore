@@ -1,2 +1,2 @@
 .env
-internal/repo/gen/cover.out
+internal/repo/gen/coverage/cover.out
