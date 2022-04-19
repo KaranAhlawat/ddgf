@@ -30,8 +30,7 @@ func (s *Suite) SetupSuite() {
 
 	s.querier = New(s.DB)
 
-	id, err := uuid.NewUUID()
-	require.NoError(s.T(), err)
+	id := uuid.New()
 
 	s.page = &Page{
 		ID:       id,
