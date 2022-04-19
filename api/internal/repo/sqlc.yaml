@@ -1,6 +1,6 @@
 version: "1"
 packages:
-  - name: "repo"
+  - name: "db"
     path: "gen"
     queries: "./queries"
     schema: "../../db/migrations/"

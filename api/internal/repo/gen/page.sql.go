@@ -3,7 +3,7 @@
 //   sqlc v1.13.0
 // source: page.sql
 
-package repo
+package db
 
 import (
 	"context"
