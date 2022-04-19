@@ -15,15 +15,7 @@ type dbConfig struct {
 	DB       string
 }
 
-func InitPostgresConn(env string) (*sql.DB, error) {
-	var dbName string
-	if env == "dev" {
-		dbName = "ddgf_db_dev"
-	} else if env == "test" {
-		dbName = "ddgf_db_test"
-	} else {
-		return nil, fmt.Errorf("invalid environment")
-	}
+func InitPostgresConn() (*sql.DB, error) {
 
 	connectionInfo := dbConfig{
 		Driver:   "postgres",
@@ -31,7 +23,7 @@ func InitPostgresConn(env string) (*sql.DB, error) {
 		Port:     "5432",
 		User:     "root",
 		Password: "password",
-		DB:       dbName,
+		DB:       "ddgf_db_dev",
 	}
 
 	conn, err := sql.Open(connectionInfo.Driver, dbConfigToString(connectionInfo))
