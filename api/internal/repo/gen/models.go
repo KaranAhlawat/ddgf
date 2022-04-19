@@ -15,3 +15,8 @@ type Page struct {
 	Datetime time.Time `json:"datetime"`
 	Content  string    `json:"content"`
 }
+
+type Tag struct {
+	ID  uuid.UUID `json:"id"`
+	Tag string    `json:"tag"`
+}

@@ -12,9 +12,13 @@ import (
 
 type Querier interface {
 	DeletePage(ctx context.Context, id uuid.UUID) error
+	DeleteTag(ctx context.Context, id uuid.UUID) error
 	InsertPage(ctx context.Context, arg InsertPageParams) (Page, error)
+	InsertTag(ctx context.Context, arg InsertTagParams) (Tag, error)
 	SelectPage(ctx context.Context, id uuid.UUID) (Page, error)
 	SelectPages(ctx context.Context) ([]Page, error)
+	SelectTag(ctx context.Context, id uuid.UUID) (Tag, error)
+	SelectTags(ctx context.Context) ([]Tag, error)
 	UpdatePage(ctx context.Context, arg UpdatePageParams) error
 }
 
