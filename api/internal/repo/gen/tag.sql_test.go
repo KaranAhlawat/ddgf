@@ -34,7 +34,7 @@ func (s *Suite) TestInsertTag() {
 	RETURNING id, tag
 	`
 
-	rows := s.mock.NewRows([]string{"id", "tag"}).
+	rows := sqlmock.NewRows([]string{"id", "tag"}).
 		AddRow(s.tag.ID, s.tag.Tag)
 
 	s.mock.ExpectQuery(regexp.QuoteMeta(query)).
@@ -59,7 +59,7 @@ func (s *Suite) TestSelectTag() {
 	LIMIT 1
 	`
 
-	rows := s.mock.NewRows([]string{"id", "tag"}).
+	rows := sqlmock.NewRows([]string{"id", "tag"}).
 		AddRow(s.tag.ID, s.tag.Tag)
 
 	s.mock.ExpectQuery(regexp.QuoteMeta(query)).
@@ -80,7 +80,7 @@ func (s *Suite) TestSelectTags() {
 	ORDER BY "tag"
 	`
 
-	rows := s.mock.NewRows([]string{"id", "tag"}).
+	rows := sqlmock.NewRows([]string{"id", "tag"}).
 		AddRow(s.tag.ID, s.tag.Tag).
 		AddRow(s.tag.ID, s.tag.Tag)
 

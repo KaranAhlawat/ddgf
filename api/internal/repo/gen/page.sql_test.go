@@ -34,7 +34,7 @@ func (s *Suite) TestInsertPage() {
 	RETURNING id, datetime, content
 	`
 
-	rows := s.mock.NewRows([]string{"id", "datetime", "content"}).
+	rows := sqlmock.NewRows([]string{"id", "datetime", "content"}).
 		AddRow(s.page.ID, s.page.Datetime, s.page.Content)
 
 	s.mock.ExpectQuery(regexp.QuoteMeta(query)).
@@ -60,7 +60,7 @@ func (s *Suite) TestSelectPage() {
 	LIMIT 1
 	`
 
-	rows := s.mock.NewRows([]string{"id", "datetime", "content"}).
+	rows := sqlmock.NewRows([]string{"id", "datetime", "content"}).
 		AddRow(s.page.ID, s.page.Datetime, s.page.Content)
 
 	s.mock.ExpectQuery(regexp.QuoteMeta(query)).
@@ -81,7 +81,7 @@ func (s *Suite) TestSelectPages() {
 	ORDER BY "datetime"
 	`
 
-	rows := s.mock.NewRows([]string{"id", "datetime", "content"}).
+	rows := sqlmock.NewRows([]string{"id", "datetime", "content"}).
 		AddRow(s.page.ID, s.page.Datetime, s.page.Content).
 		AddRow(s.page.ID, s.page.Datetime, s.page.Content)
 

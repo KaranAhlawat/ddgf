@@ -19,6 +19,7 @@ type Suite struct {
 	querier *Queries
 	page    *Page
 	tag     *Tag
+	advice  *Advice
 	ctx     context.Context
 }
 
@@ -41,6 +42,11 @@ func (s *Suite) SetupSuite() {
 	s.tag = &Tag{
 		ID:  id,
 		Tag: "Testing",
+	}
+
+	s.advice = &Advice{
+		ID:      id,
+		Content: "Always test your code thoroughly",
 	}
 
 	s.ctx = context.Background()

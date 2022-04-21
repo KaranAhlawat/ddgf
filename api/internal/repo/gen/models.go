@@ -10,6 +10,11 @@ import (
 	"github.com/google/uuid"
 )
 
+type Advice struct {
+	ID      uuid.UUID `json:"id"`
+	Content string    `json:"content"`
+}
+
 type Page struct {
 	ID       uuid.UUID `json:"id"`
 	Datetime time.Time `json:"datetime"`

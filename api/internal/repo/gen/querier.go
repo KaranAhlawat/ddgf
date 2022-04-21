@@ -11,14 +11,19 @@ import (
 )
 
 type Querier interface {
+	DeleteAdvice(ctx context.Context, id uuid.UUID) error
 	DeletePage(ctx context.Context, id uuid.UUID) error
 	DeleteTag(ctx context.Context, id uuid.UUID) error
+	InsertAdvice(ctx context.Context, arg InsertAdviceParams) (Advice, error)
 	InsertPage(ctx context.Context, arg InsertPageParams) (Page, error)
 	InsertTag(ctx context.Context, arg InsertTagParams) (Tag, error)
+	SelectAdvice(ctx context.Context, id uuid.UUID) (Advice, error)
+	SelectAdvices(ctx context.Context) ([]Advice, error)
 	SelectPage(ctx context.Context, id uuid.UUID) (Page, error)
 	SelectPages(ctx context.Context) ([]Page, error)
 	SelectTag(ctx context.Context, id uuid.UUID) (Tag, error)
 	SelectTags(ctx context.Context) ([]Tag, error)
+	UpdateAdvice(ctx context.Context, arg UpdateAdviceParams) error
 	UpdatePage(ctx context.Context, arg UpdatePageParams) error
 }
 
