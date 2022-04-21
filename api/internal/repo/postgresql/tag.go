@@ -9,22 +9,22 @@ import (
 	"github.com/google/uuid"
 )
 
-type TagRepo struct {
+type Tag struct {
 	q *db.Queries
 }
 
-func NewTagRepo(database *sql.DB) *TagRepo {
-	return &TagRepo{
+func NewTag(database *sql.DB) *Tag {
+	return &Tag{
 		q: db.New(database),
 	}
 }
 
-func (t *TagRepo) Delete(ctx context.Context, id uuid.UUID) error {
+func (t *Tag) Delete(ctx context.Context, id uuid.UUID) error {
 	err := t.q.DeleteTag(ctx, id)
 	return err
 }
 
-func (t *TagRepo) Create(ctx context.Context, id uuid.UUID, tag string) (model.Tag, error) {
+func (t *Tag) Create(ctx context.Context, id uuid.UUID, tag string) (model.Tag, error) {
 	res, err := t.q.InsertTag(ctx, db.InsertTagParams{
 		ID:  id,
 		Tag: tag,
@@ -39,7 +39,7 @@ func (t *TagRepo) Create(ctx context.Context, id uuid.UUID, tag string) (model.T
 	}, nil
 }
 
-func (t *TagRepo) Find(ctx context.Context, id uuid.UUID) (model.Tag, error) {
+func (t *Tag) Find(ctx context.Context, id uuid.UUID) (model.Tag, error) {
 	res, err := t.q.SelectTag(ctx, id)
 	if err != nil {
 		return model.Tag{}, err
@@ -51,7 +51,7 @@ func (t *TagRepo) Find(ctx context.Context, id uuid.UUID) (model.Tag, error) {
 	}, nil
 }
 
-func (t *TagRepo) All(ctx context.Context) ([]model.Tag, error) {
+func (t *Tag) All(ctx context.Context) ([]model.Tag, error) {
 	modelTags := []model.Tag{}
 	res, err := t.q.SelectTags(ctx)
 	if err != nil {
