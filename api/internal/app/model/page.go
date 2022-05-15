@@ -7,7 +7,7 @@ import (
 )
 
 type Page struct {
-	ID       uuid.UUID
 	Datetime time.Time
 	Content  string
+	ID       uuid.UUID
 }
