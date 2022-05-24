@@ -1,4 +1,5 @@
 CREATE TABLE "advices" (
-    "id" UUID PRIMARY KEY,
-    "content" TEXT NOT NULL
+    "id" uuid PRIMARY KEY,
+    "content" text NOT NULL
 );
+

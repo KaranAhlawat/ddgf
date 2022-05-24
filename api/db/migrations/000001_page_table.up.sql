@@ -1,7 +1,8 @@
 CREATE TABLE "pages" (
-    "id" UUID PRIMARY KEY,
-    "datetime" DATE NOT NULL,
-    "content" TEXT NOT NULL
+    "id" uuid PRIMARY KEY,
+    "datetime" date NOT NULL,
+    "content" text NOT NULL
 );
 
 CREATE INDEX ON "pages" ("datetime");
+
