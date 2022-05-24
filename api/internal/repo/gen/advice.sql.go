@@ -28,8 +28,8 @@ RETURNING id, content
 `
 
 type InsertAdviceParams struct {
-	ID      uuid.UUID `json:"id"`
 	Content string    `json:"content"`
+	ID      uuid.UUID `json:"id"`
 }
 
 func (q *Queries) InsertAdvice(ctx context.Context, arg InsertAdviceParams) (Advice, error) {

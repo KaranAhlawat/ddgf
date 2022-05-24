@@ -28,8 +28,8 @@ RETURNING id, tag
 `
 
 type InsertTagParams struct {
-	ID  uuid.UUID `json:"id"`
 	Tag string    `json:"tag"`
+	ID  uuid.UUID `json:"id"`
 }
 
 func (q *Queries) InsertTag(ctx context.Context, arg InsertTagParams) (Tag, error) {

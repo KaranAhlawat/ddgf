@@ -29,9 +29,9 @@ RETURNING id, datetime, content
 `
 
 type InsertPageParams struct {
-	ID       uuid.UUID `json:"id"`
 	Datetime time.Time `json:"datetime"`
 	Content  string    `json:"content"`
+	ID       uuid.UUID `json:"id"`
 }
 
 func (q *Queries) InsertPage(ctx context.Context, arg InsertPageParams) (Page, error) {
