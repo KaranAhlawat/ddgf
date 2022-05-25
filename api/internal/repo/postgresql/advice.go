@@ -23,7 +23,7 @@ func NewAdvice(database *sql.DB) *Advice {
 func (a *Advice) Remove(ctx context.Context, id uuid.UUID) error {
 	err := a.q.DeleteAdvice(ctx, id)
 	if err != nil {
-		return fmt.Errorf("delete: %w", err)
+		return fmt.Errorf("db delete: %w", err)
 	} else {
 		return nil
 	}
@@ -35,7 +35,7 @@ func (a *Advice) Insert(ctx context.Context, id uuid.UUID, content string) (mode
 		Content: content,
 	})
 	if err != nil {
-		return model.Advice{}, fmt.Errorf("insert: %w", err)
+		return model.Advice{}, fmt.Errorf("db insert: %w", err)
 	} else {
 		return model.Advice{
 			ID:      id,
@@ -50,7 +50,7 @@ func (a *Advice) Select(ctx context.Context, id uuid.UUID) (model.Advice, error)
 	res, err := a.q.SelectAdvice(ctx, id)
 
 	if err != nil {
-		return model.Advice{}, fmt.Errorf("select: %w", err)
+		return model.Advice{}, fmt.Errorf("db select: %w", err)
 	}
 
 	return model.Advice{
@@ -64,11 +64,7 @@ func (a *Advice) SelectAll(ctx context.Context, id uuid.UUID) ([]model.Advice, e
 	modelAdvices := []model.Advice{}
 	res, err := a.q.SelectAdvices(ctx)
 	if err != nil {
-		return modelAdvices, fmt.Errorf("select all: %w", err)
-	}
-
-	if err != nil {
-		return modelAdvices, fmt.Errorf("select all tags: %w", err)
+		return modelAdvices, fmt.Errorf("db select all: %w", err)
 	}
 
 	for _, dbAdvice := range res {
@@ -90,7 +86,7 @@ func (a *Advice) Update(ctx context.Context, content string, id uuid.UUID) error
 		ID:      id,
 	})
 	if err != nil {
-		return fmt.Errorf("update: %w", err)
+		return fmt.Errorf("db update: %w", err)
 	} else {
 		return nil
 	}
@@ -100,7 +96,7 @@ func (a *Advice) SelectTags(ctx context.Context, id uuid.UUID) ([]model.Tag, err
 	modelTags := []model.Tag{}
 	tags, err := a.q.SelectTagsForAdvice(ctx, id)
 	if err != nil {
-		return modelTags, fmt.Errorf("select advice tags: %w", err)
+		return modelTags, fmt.Errorf("db select ad-tag: %w", err)
 	}
 
 	for _, tag := range tags {
@@ -118,7 +114,7 @@ func (a *Advice) SelectAllTags(ctx context.Context, id uuid.UUID) (map[uuid.UUID
 	gtmap := map[uuid.UUID][]model.Tag{}
 	res, err := a.q.SelectAllEntries(ctx)
 	if err != nil {
-		return gtmap, fmt.Errorf("select all tags: %w", err)
+		return gtmap, fmt.Errorf("db all ad-tags: %w", err)
 	}
 
 	for _, row := range res {
@@ -139,7 +135,7 @@ func (a *Advice) InserTag(ctx context.Context, a_id uuid.UUID, t_id uuid.UUID) e
 	})
 
 	if err != nil {
-		return fmt.Errorf("insert ad-tag: %w", err)
+		return fmt.Errorf("db insert ad-tag: %w", err)
 	}
 
 	return nil
@@ -152,7 +148,7 @@ func (a *Advice) DeleteTag(ctx context.Context, a_id uuid.UUID, t_id uuid.UUID) 
 	})
 
 	if err != nil {
-		return fmt.Errorf("delete ad-tag: %w", err)
+		return fmt.Errorf("db delete ad-tag: %w", err)
 	}
 
 	return nil

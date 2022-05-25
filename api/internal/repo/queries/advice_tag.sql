@@ -42,3 +42,13 @@ DELETE FROM "advices_tags"
 WHERE "advice_id" = $1
     AND "tag_id" = $2;
 
+-- name: SelectTagsForList :many
+SELECT
+    "at"."advice_id",
+    "at"."tag_id",
+    "t"."tag"
+FROM
+    "advices_tags" "at"
+    JOIN "tags" "t" ON "at"."tag_id" = "t"."id"
+WHERE
+    "at"."advice_id" = ANY($1::uuid[]);

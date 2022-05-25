@@ -28,6 +28,7 @@ type Querier interface {
 	SelectTag(ctx context.Context, id uuid.UUID) (Tag, error)
 	SelectTags(ctx context.Context) ([]Tag, error)
 	SelectTagsForAdvice(ctx context.Context, adviceID uuid.UUID) ([]SelectTagsForAdviceRow, error)
+	SelectTagsForList(ctx context.Context, dollar_1 []uuid.UUID) ([]SelectTagsForListRow, error)
 	UpdateAdvice(ctx context.Context, arg UpdateAdviceParams) error
 	UpdatePage(ctx context.Context, arg UpdatePageParams) error
 }

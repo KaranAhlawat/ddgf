@@ -24,7 +24,7 @@ func NewPage(database *sql.DB) *Page {
 func (p *Page) Remove(ctx context.Context, id uuid.UUID) error {
 	err := p.q.DeletePage(ctx, id)
 	if err != nil {
-		return fmt.Errorf("delete: %w", err)
+		return fmt.Errorf("db delete: %w", err)
 	} else {
 		return nil
 	}
@@ -37,7 +37,7 @@ func (p *Page) Insert(ctx context.Context, id uuid.UUID, datetime time.Time, con
 		Content:  content,
 	})
 	if err != nil {
-		return model.Page{}, fmt.Errorf("insert: %w", err)
+		return model.Page{}, fmt.Errorf("db insert: %w", err)
 	} else {
 		return model.Page{
 			ID:       id,
@@ -50,7 +50,7 @@ func (p *Page) Insert(ctx context.Context, id uuid.UUID, datetime time.Time, con
 func (p *Page) Select(ctx context.Context, id uuid.UUID) (model.Page, error) {
 	res, err := p.q.SelectPage(ctx, id)
 	if err != nil {
-		return model.Page{}, fmt.Errorf("select: %w", err)
+		return model.Page{}, fmt.Errorf("db select: %w", err)
 	} else {
 		return model.Page{
 			ID:       res.ID,
@@ -64,7 +64,7 @@ func (p *Page) SelectAll(ctx context.Context) ([]model.Page, error) {
 	modelPages := []model.Page{}
 	res, err := p.q.SelectPages(ctx)
 	if err != nil {
-		return modelPages, fmt.Errorf("select all: %w", err)
+		return modelPages, fmt.Errorf("db select all: %w", err)
 	} else {
 		for _, dbPage := range res {
 			temp := model.Page{
@@ -86,7 +86,7 @@ func (p *Page) Update(ctx context.Context, content string, datetime time.Time, i
 		ID:       id,
 	})
 	if err != nil {
-		return fmt.Errorf("update: %w", err)
+		return fmt.Errorf("db update: %w", err)
 	} else {
 		return nil
 	}

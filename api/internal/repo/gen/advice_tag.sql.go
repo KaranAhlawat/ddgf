@@ -9,6 +9,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 )
 
 const deleteTagFromAdvice = `-- name: DeleteTagFromAdvice :exec
@@ -154,6 +155,47 @@ func (q *Queries) SelectTagsForAdvice(ctx context.Context, adviceID uuid.UUID) (
 	for rows.Next() {
 		var i SelectTagsForAdviceRow
 		if err := rows.Scan(&i.TagID, &i.Tag); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const selectTagsForList = `-- name: SelectTagsForList :many
+SELECT
+    "at"."advice_id",
+    "at"."tag_id",
+    "t"."tag"
+FROM
+    "advices_tags" "at"
+    JOIN "tags" "t" ON "at"."tag_id" = "t"."id"
+WHERE
+    "at"."advice_id" = ANY($1::uuid[])
+`
+
+type SelectTagsForListRow struct {
+	AdviceID uuid.UUID `json:"advice_id"`
+	TagID    uuid.UUID `json:"tag_id"`
+	Tag      string    `json:"tag"`
+}
+
+func (q *Queries) SelectTagsForList(ctx context.Context, dollar_1 []uuid.UUID) ([]SelectTagsForListRow, error) {
+	rows, err := q.db.QueryContext(ctx, selectTagsForList, pq.Array(dollar_1))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []SelectTagsForListRow{}
+	for rows.Next() {
+		var i SelectTagsForListRow
+		if err := rows.Scan(&i.AdviceID, &i.TagID, &i.Tag); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
