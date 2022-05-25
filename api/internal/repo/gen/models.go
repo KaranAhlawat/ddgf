@@ -15,6 +15,11 @@ type Advice struct {
 	ID      uuid.UUID `json:"id"`
 }
 
+type AdvicesTag struct {
+	TagID    uuid.UUID `json:"tag_id"`
+	AdviceID uuid.UUID `json:"advice_id"`
+}
+
 type Page struct {
 	Datetime time.Time `json:"datetime"`
 	Content  string    `json:"content"`
