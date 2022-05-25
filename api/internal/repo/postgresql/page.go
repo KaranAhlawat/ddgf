@@ -21,7 +21,7 @@ func NewPage(database *sql.DB) *Page {
 	}
 }
 
-func (p *Page) Delete(ctx context.Context, id uuid.UUID) error {
+func (p *Page) Remove(ctx context.Context, id uuid.UUID) error {
 	err := p.q.DeletePage(ctx, id)
 	if err != nil {
 		return fmt.Errorf("delete: %w", err)
@@ -30,7 +30,7 @@ func (p *Page) Delete(ctx context.Context, id uuid.UUID) error {
 	}
 }
 
-func (p *Page) Create(ctx context.Context, id uuid.UUID, datetime time.Time, content string) (model.Page, error) {
+func (p *Page) Insert(ctx context.Context, id uuid.UUID, datetime time.Time, content string) (model.Page, error) {
 	_, err := p.q.InsertPage(ctx, db.InsertPageParams{
 		ID:       id,
 		Datetime: datetime,
@@ -47,7 +47,7 @@ func (p *Page) Create(ctx context.Context, id uuid.UUID, datetime time.Time, con
 	}
 }
 
-func (p *Page) Find(ctx context.Context, id uuid.UUID) (model.Page, error) {
+func (p *Page) Select(ctx context.Context, id uuid.UUID) (model.Page, error) {
 	res, err := p.q.SelectPage(ctx, id)
 	if err != nil {
 		return model.Page{}, fmt.Errorf("select: %w", err)
@@ -60,7 +60,7 @@ func (p *Page) Find(ctx context.Context, id uuid.UUID) (model.Page, error) {
 	}
 }
 
-func (p *Page) All(ctx context.Context) ([]model.Page, error) {
+func (p *Page) SelectAll(ctx context.Context) ([]model.Page, error) {
 	modelPages := []model.Page{}
 	res, err := p.q.SelectPages(ctx)
 	if err != nil {

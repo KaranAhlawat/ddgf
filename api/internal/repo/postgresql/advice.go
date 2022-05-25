@@ -20,7 +20,7 @@ func NewAdvice(database *sql.DB) *Advice {
 	}
 }
 
-func (a *Advice) Delete(ctx context.Context, id uuid.UUID) error {
+func (a *Advice) Remove(ctx context.Context, id uuid.UUID) error {
 	err := a.q.DeleteAdvice(ctx, id)
 	if err != nil {
 		return fmt.Errorf("delete: %w", err)
@@ -29,7 +29,7 @@ func (a *Advice) Delete(ctx context.Context, id uuid.UUID) error {
 	}
 }
 
-func (a *Advice) Create(ctx context.Context, id uuid.UUID, content string) (model.Advice, error) {
+func (a *Advice) Insert(ctx context.Context, id uuid.UUID, content string) (model.Advice, error) {
 	_, err := a.q.InsertAdvice(ctx, db.InsertAdviceParams{
 		ID:      id,
 		Content: content,
@@ -45,7 +45,7 @@ func (a *Advice) Create(ctx context.Context, id uuid.UUID, content string) (mode
 	}
 }
 
-func (a *Advice) Find(ctx context.Context, id uuid.UUID) (model.Advice, error) {
+func (a *Advice) Select(ctx context.Context, id uuid.UUID) (model.Advice, error) {
 	modelTags := []model.Tag{}
 	res, err := a.q.SelectAdvice(ctx, id)
 
@@ -60,7 +60,7 @@ func (a *Advice) Find(ctx context.Context, id uuid.UUID) (model.Advice, error) {
 	}, nil
 }
 
-func (a *Advice) All(ctx context.Context, id uuid.UUID) ([]model.Advice, error) {
+func (a *Advice) SelectAll(ctx context.Context, id uuid.UUID) ([]model.Advice, error) {
 	modelAdvices := []model.Advice{}
 	res, err := a.q.SelectAdvices(ctx)
 	if err != nil {
@@ -96,7 +96,7 @@ func (a *Advice) Update(ctx context.Context, content string, id uuid.UUID) error
 	}
 }
 
-func (a *Advice) FindTags(ctx context.Context, id uuid.UUID) ([]model.Tag, error) {
+func (a *Advice) SelectTags(ctx context.Context, id uuid.UUID) ([]model.Tag, error) {
 	modelTags := []model.Tag{}
 	tags, err := a.q.SelectTagsForAdvice(ctx, id)
 	if err != nil {
@@ -114,7 +114,7 @@ func (a *Advice) FindTags(ctx context.Context, id uuid.UUID) ([]model.Tag, error
 	return modelTags, nil
 }
 
-func (a *Advice) AllTags(ctx context.Context, id uuid.UUID) (map[uuid.UUID][]model.Tag, error) {
+func (a *Advice) SelectAllTags(ctx context.Context, id uuid.UUID) (map[uuid.UUID][]model.Tag, error) {
 	gtmap := map[uuid.UUID][]model.Tag{}
 	res, err := a.q.SelectAllEntries(ctx)
 	if err != nil {
@@ -132,7 +132,7 @@ func (a *Advice) AllTags(ctx context.Context, id uuid.UUID) (map[uuid.UUID][]mod
 	return gtmap, nil
 }
 
-func (a *Advice) AddTag(ctx context.Context, a_id uuid.UUID, t_id uuid.UUID) error {
+func (a *Advice) InserTag(ctx context.Context, a_id uuid.UUID, t_id uuid.UUID) error {
 	_, err := a.q.InsertAdviceTagEntry(ctx, db.InsertAdviceTagEntryParams{
 		AdviceID: a_id,
 		TagID:    t_id,
@@ -145,7 +145,7 @@ func (a *Advice) AddTag(ctx context.Context, a_id uuid.UUID, t_id uuid.UUID) err
 	return nil
 }
 
-func (a *Advice) RemoveTag(ctx context.Context, a_id uuid.UUID, t_id uuid.UUID) error {
+func (a *Advice) DeleteTag(ctx context.Context, a_id uuid.UUID, t_id uuid.UUID) error {
 	err := a.q.DeleteTagFromAdvice(ctx, db.DeleteTagFromAdviceParams{
 		AdviceID: a_id,
 		TagID:    t_id,
