@@ -11,22 +11,22 @@ import (
 )
 
 type Advice struct {
-	Content string    `json:"content"`
 	ID      uuid.UUID `json:"id"`
+	Content string    `json:"content"`
 }
 
 type AdvicesTag struct {
-	TagID    uuid.UUID `json:"tag_id"`
 	AdviceID uuid.UUID `json:"advice_id"`
+	TagID    uuid.UUID `json:"tag_id"`
 }
 
 type Page struct {
+	ID       uuid.UUID `json:"id"`
 	Datetime time.Time `json:"datetime"`
 	Content  string    `json:"content"`
-	ID       uuid.UUID `json:"id"`
 }
 
 type Tag struct {
-	Tag string    `json:"tag"`
 	ID  uuid.UUID `json:"id"`
+	Tag string    `json:"tag"`
 }

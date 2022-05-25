@@ -88,17 +88,18 @@ func (s *Suite) TestSelectAdvicesForTag() {
 
 func (s *Suite) TestSelectAllEntries() {
 	query := `-- name: SelectAllEntries :many
-    SELECT
-        advice_id, tag_id
-    FROM
-        "advices_tags"
-    ORDER BY
-        "advice_id"
-    `
+	SELECT
+			"at"."advice_id", "at"."tag_id", "t"."tag"
+	FROM
+			"advices_tags" "at"
+			JOIN "tags" "t" ON "at"."tag_id" = "t"."tag"
+	ORDER BY
+			"advice_id"
+	`
 
-	rows := sqlmock.NewRows([]string{"advice_id", "tag_id"}).
-		AddRow(s.advice.ID, s.tag.ID).
-		AddRow(s.advice.ID, s.tag.ID)
+	rows := sqlmock.NewRows([]string{"advice_id", "tag_id", "tag"}).
+		AddRow(s.advice.ID, s.tag.ID, s.tag.Tag).
+		AddRow(s.advice.ID, s.tag.ID, s.tag.Tag)
 
 	s.mock.ExpectQuery(regexp.QuoteMeta(query)).
 		WillReturnRows(rows)
@@ -111,6 +112,7 @@ func (s *Suite) TestSelectAllEntries() {
 	for _, adviceTag := range res {
 		require.Equal(s.T(), adviceTag.AdviceID, s.advice.ID)
 		require.Equal(s.T(), adviceTag.TagID, s.tag.ID)
+		require.Equal(s.T(), adviceTag.Tag, s.tag.Tag)
 	}
 }
 

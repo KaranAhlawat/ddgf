@@ -58,8 +58,8 @@ WHERE
 `
 
 type SelectAdvicesForTagRow struct {
-	Content  string    `json:"content"`
 	AdviceID uuid.UUID `json:"advice_id"`
+	Content  string    `json:"content"`
 }
 
 func (q *Queries) SelectAdvicesForTag(ctx context.Context, tagID uuid.UUID) ([]SelectAdvicesForTagRow, error) {
@@ -87,23 +87,30 @@ func (q *Queries) SelectAdvicesForTag(ctx context.Context, tagID uuid.UUID) ([]S
 
 const selectAllEntries = `-- name: SelectAllEntries :many
 SELECT
-    advice_id, tag_id
+    "at"."advice_id", "at"."tag_id", "t"."tag"
 FROM
-    "advices_tags"
+    "advices_tags" "at"
+    JOIN "tags" "t" ON "at"."tag_id" = "t"."tag"
 ORDER BY
     "advice_id"
 `
 
-func (q *Queries) SelectAllEntries(ctx context.Context) ([]AdvicesTag, error) {
+type SelectAllEntriesRow struct {
+	AdviceID uuid.UUID `json:"advice_id"`
+	TagID    uuid.UUID `json:"tag_id"`
+	Tag      string    `json:"tag"`
+}
+
+func (q *Queries) SelectAllEntries(ctx context.Context) ([]SelectAllEntriesRow, error) {
 	rows, err := q.db.QueryContext(ctx, selectAllEntries)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []AdvicesTag{}
+	items := []SelectAllEntriesRow{}
 	for rows.Next() {
-		var i AdvicesTag
-		if err := rows.Scan(&i.AdviceID, &i.TagID); err != nil {
+		var i SelectAllEntriesRow
+		if err := rows.Scan(&i.AdviceID, &i.TagID, &i.Tag); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -129,8 +136,8 @@ WHERE
 `
 
 type SelectTagsForAdviceRow struct {
-	Tag   string    `json:"tag"`
 	TagID uuid.UUID `json:"tag_id"`
+	Tag   string    `json:"tag"`
 }
 
 func (q *Queries) SelectTagsForAdvice(ctx context.Context, adviceID uuid.UUID) ([]SelectTagsForAdviceRow, error) {

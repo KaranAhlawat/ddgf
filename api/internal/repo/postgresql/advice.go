@@ -40,38 +40,55 @@ func (a *Advice) Create(ctx context.Context, id uuid.UUID, content string) (mode
 		return model.Advice{
 			ID:      id,
 			Content: content,
+			Tags:    []model.Tag{},
 		}, nil
 	}
 }
 
 func (a *Advice) Find(ctx context.Context, id uuid.UUID) (model.Advice, error) {
+	modelTags := []model.Tag{}
 	res, err := a.q.SelectAdvice(ctx, id)
 	if err != nil {
 		return model.Advice{}, fmt.Errorf("select: %w", err)
-	} else {
-		return model.Advice{
-			ID:      res.ID,
-			Content: res.Content,
-		}, nil
 	}
+
+	rows, err := a.q.SelectTagsForAdvice(ctx, id)
+	if err != nil {
+		return model.Advice{}, fmt.Errorf("select tags: %w", err)
+	}
+
+	for _, tag := range rows {
+		i := model.Tag{
+			ID:  tag.TagID,
+			Tag: tag.Tag,
+		}
+		modelTags = append(modelTags, i)
+	}
+
+	return model.Advice{
+		ID:      res.ID,
+		Content: res.Content,
+		Tags:    modelTags,
+	}, nil
 }
 
 func (a *Advice) All(ctx context.Context, id uuid.UUID) ([]model.Advice, error) {
 	modelAdvices := []model.Advice{}
+	//	modelTags := []model.Tag{}
 	res, err := a.q.SelectAdvices(ctx)
 	if err != nil {
 		return modelAdvices, fmt.Errorf("select all: %w", err)
-	} else {
-		for _, dbAdvice := range res {
-			temp := model.Advice{
-				ID:      dbAdvice.ID,
-				Content: dbAdvice.Content,
-			}
-			modelAdvices = append(modelAdvices, temp)
-		}
-
-		return modelAdvices, nil
 	}
+
+	for _, dbAdvice := range res {
+		temp := model.Advice{
+			ID:      dbAdvice.ID,
+			Content: dbAdvice.Content,
+		}
+		modelAdvices = append(modelAdvices, temp)
+	}
+
+	return modelAdvices, nil
 }
 
 func (a *Advice) Update(ctx context.Context, content string, id uuid.UUID) error {

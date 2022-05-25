@@ -6,9 +6,10 @@ RETURNING
 
 -- name: SelectAllEntries :many
 SELECT
-    *
+    "at"."advice_id", "at"."tag_id", "t"."tag"
 FROM
-    "advices_tags"
+    "advices_tags" "at"
+    JOIN "tags" "t" ON "at"."tag_id" = "t"."tag"
 ORDER BY
     "advice_id";
 

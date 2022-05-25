@@ -22,7 +22,7 @@ type Querier interface {
 	SelectAdvice(ctx context.Context, id uuid.UUID) (Advice, error)
 	SelectAdvices(ctx context.Context) ([]Advice, error)
 	SelectAdvicesForTag(ctx context.Context, tagID uuid.UUID) ([]SelectAdvicesForTagRow, error)
-	SelectAllEntries(ctx context.Context) ([]AdvicesTag, error)
+	SelectAllEntries(ctx context.Context) ([]SelectAllEntriesRow, error)
 	SelectPage(ctx context.Context, id uuid.UUID) (Page, error)
 	SelectPages(ctx context.Context) ([]Page, error)
 	SelectTag(ctx context.Context, id uuid.UUID) (Tag, error)
