@@ -87,12 +87,16 @@ func (q *Queries) SelectAdvicesForTag(ctx context.Context, tagID uuid.UUID) ([]S
 
 const selectAllEntries = `-- name: SelectAllEntries :many
 SELECT
-    "at"."advice_id", "at"."tag_id", "t"."tag"
+    "at"."advice_id",
+    "at"."tag_id",
+    "t"."tag"
 FROM
     "advices_tags" "at"
     JOIN "tags" "t" ON "at"."tag_id" = "t"."tag"
+GROUP BY
+    "at"."advice_id"
 ORDER BY
-    "advice_id"
+    "at"."advice_id"
 `
 
 type SelectAllEntriesRow struct {

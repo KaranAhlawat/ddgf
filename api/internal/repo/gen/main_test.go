@@ -31,21 +31,23 @@ func (s *Suite) SetupSuite() {
 
 	s.querier = New(s.DB)
 
-	id := uuid.New()
+	id_page := uuid.New()
+	id_advice := uuid.New()
+	id_tag := uuid.New()
 
 	s.page = &Page{
-		ID:       id,
+		ID:       id_page,
 		Datetime: time.Now(),
 		Content:  "Testing page with random id",
 	}
 
 	s.tag = &Tag{
-		ID:  id,
+		ID:  id_tag,
 		Tag: "Testing",
 	}
 
 	s.advice = &Advice{
-		ID:      id,
+		ID:      id_advice,
 		Content: "Always test your code thoroughly",
 	}
 

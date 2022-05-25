@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"regexp"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -89,12 +90,16 @@ func (s *Suite) TestSelectAdvicesForTag() {
 func (s *Suite) TestSelectAllEntries() {
 	query := `-- name: SelectAllEntries :many
 	SELECT
-			"at"."advice_id", "at"."tag_id", "t"."tag"
+			"at"."advice_id",
+			"at"."tag_id",
+			"t"."tag"
 	FROM
 			"advices_tags" "at"
 			JOIN "tags" "t" ON "at"."tag_id" = "t"."tag"
+	GROUP BY
+			"at"."advice_id"
 	ORDER BY
-			"advice_id"
+			"at"."advice_id"
 	`
 
 	rows := sqlmock.NewRows([]string{"advice_id", "tag_id", "tag"}).
@@ -110,6 +115,7 @@ func (s *Suite) TestSelectAllEntries() {
 	require.NotNil(s.T(), res)
 
 	for _, adviceTag := range res {
+		fmt.Printf("\nAdvice tag: %v", adviceTag)
 		require.Equal(s.T(), adviceTag.AdviceID, s.advice.ID)
 		require.Equal(s.T(), adviceTag.TagID, s.tag.ID)
 		require.Equal(s.T(), adviceTag.Tag, s.tag.Tag)
