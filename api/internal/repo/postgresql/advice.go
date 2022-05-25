@@ -60,7 +60,7 @@ func (a *Advice) Select(ctx context.Context, id uuid.UUID) (model.Advice, error)
 	}, nil
 }
 
-func (a *Advice) SelectAll(ctx context.Context, id uuid.UUID) ([]model.Advice, error) {
+func (a *Advice) SelectAll(ctx context.Context) ([]model.Advice, error) {
 	modelAdvices := []model.Advice{}
 	res, err := a.q.SelectAdvices(ctx)
 	if err != nil {
@@ -110,7 +110,7 @@ func (a *Advice) SelectTags(ctx context.Context, id uuid.UUID) ([]model.Tag, err
 	return modelTags, nil
 }
 
-func (a *Advice) SelectAllTags(ctx context.Context, id uuid.UUID) (map[uuid.UUID][]model.Tag, error) {
+func (a *Advice) SelectAllTags(ctx context.Context) (map[uuid.UUID][]model.Tag, error) {
 	gtmap := map[uuid.UUID][]model.Tag{}
 	res, err := a.q.SelectAllEntries(ctx)
 	if err != nil {
@@ -128,7 +128,7 @@ func (a *Advice) SelectAllTags(ctx context.Context, id uuid.UUID) (map[uuid.UUID
 	return gtmap, nil
 }
 
-func (a *Advice) InserTag(ctx context.Context, a_id uuid.UUID, t_id uuid.UUID) error {
+func (a *Advice) InsertTag(ctx context.Context, a_id uuid.UUID, t_id uuid.UUID) error {
 	_, err := a.q.InsertAdviceTagEntry(ctx, db.InsertAdviceTagEntryParams{
 		AdviceID: a_id,
 		TagID:    t_id,
