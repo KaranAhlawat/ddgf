@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-type dbConfig struct {
+type DBConfig struct {
 	Driver   string
 	Host     string
 	Port     string
@@ -17,7 +17,7 @@ type dbConfig struct {
 
 func InitPostgresConn() (*sql.DB, error) {
 
-	connectionInfo := dbConfig{
+	connectionInfo := DBConfig{
 		Driver:   "postgres",
 		Host:     "localhost",
 		Port:     "5432",
@@ -41,7 +41,7 @@ func InitPostgresConn() (*sql.DB, error) {
 	return conn, nil
 }
 
-func dbConfigToString(d dbConfig) string {
+func dbConfigToString(d DBConfig) string {
 	return fmt.Sprintf("%s://%s:%s@%s:%s/%s?sslmode=disable",
 		d.Driver,
 		d.User,
