@@ -49,6 +49,8 @@ func (ph *PageHandler) GetPage(c *fiber.Ctx) error {
 func (ph *PageHandler) CreatePage(c *fiber.Ctx) error {
 	pageDTO := new(dto.PagePostDTO)
 
+	id := uuid.New()
+
 	if err := c.BodyParser(pageDTO); err != nil {
 		c.Status(fiber.StatusBadGateway).
 			SendString(err.Error())
@@ -58,7 +60,7 @@ func (ph *PageHandler) CreatePage(c *fiber.Ctx) error {
 	page := model.Page{
 		Datetime: time.Now(),
 		Content:  pageDTO.Content,
-		ID:       pageDTO.ID,
+		ID:       id,
 	}
 
 	if err := ph.s.Add(&page); err != nil {
