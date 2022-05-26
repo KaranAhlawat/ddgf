@@ -11,9 +11,7 @@ SELECT
     "t"."tag"
 FROM
     "advices_tags" "at"
-    JOIN "tags" "t" ON "at"."tag_id" = "t"."tag"
-GROUP BY
-    "at"."advice_id"
+    JOIN "tags" "t" ON "at"."tag_id" = "t"."id"
 ORDER BY
     "at"."advice_id";
 

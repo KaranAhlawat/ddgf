@@ -7,7 +7,7 @@ import (
 )
 
 type Page struct {
-	Datetime time.Time
-	Content  string
-	ID       uuid.UUID
+	Datetime time.Time `json:"datetime"`
+	Content  string    `json:"content"`
+	ID       uuid.UUID `json:"id"`
 }

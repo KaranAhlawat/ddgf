@@ -45,10 +45,12 @@ func (a *Advice) Get(id uuid.UUID) (model.Advice, error) {
 	if err != nil {
 		return model.Advice{}, fmt.Errorf("advice get: %w", err)
 	}
+
 	tags, err := a.r.SelectTags(a.ctx, advice.ID)
 	if err != nil {
 		return model.Advice{}, fmt.Errorf("advice get: %w", err)
 	}
+
 	advice.Tags = tags
 	return advice, nil
 }
@@ -65,8 +67,8 @@ func (a *Advice) All() ([]model.Advice, error) {
 		return []model.Advice{}, fmt.Errorf("advice all: %w", err)
 	}
 
-	for _, advice := range advices {
-		advice.Tags = tags[advice.ID]
+	for i, advice := range advices {
+		advices[i].Tags = tags[advice.ID]
 	}
 
 	return advices, nil

@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/KaranAhlawat/ddgf/internal/app/dto"
@@ -24,37 +23,34 @@ func NewPageHandler(s *service.Page) *PageHandler {
 func (ph *PageHandler) GetAllPages(c *fiber.Ctx) error {
 	pages, err := ph.s.All()
 	if err != nil {
-		c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
-		return err
+		return c.Status(fiber.ErrInternalServerError.Code).
+			SendString(err.Error())
 	}
-	return c.JSON(pages)
+	return c.Status(fiber.StatusOK).JSON(pages)
 }
 
 func (ph *PageHandler) GetPage(c *fiber.Ctx) error {
 	id, err := uuid.Parse(c.Params("id"))
 	if err != nil {
-		c.Status(fiber.StatusBadRequest).
-			SendString(fmt.Errorf("invalid UUIDv4 : %w", err).Error())
-		return err
+		return c.Status(fiber.StatusBadRequest).
+			SendString(err.Error())
 	}
 	page, err := ph.s.Get(id)
 	if err != nil {
-		c.Status(fiber.StatusInternalServerError).
+		return c.Status(fiber.StatusInternalServerError).
 			SendString(err.Error())
-		return err
 	}
-	return c.JSON(page)
+	return c.Status(fiber.StatusOK).JSON(page)
 }
 
 func (ph *PageHandler) CreatePage(c *fiber.Ctx) error {
-	pageDTO := new(dto.PagePostDTO)
+	pageDTO := new(dto.PageHttpDTO)
 
 	id := uuid.New()
 
 	if err := c.BodyParser(pageDTO); err != nil {
-		c.Status(fiber.StatusBadGateway).
+		return c.Status(fiber.StatusBadRequest).
 			SendString(err.Error())
-		return err
 	}
 
 	page := model.Page{
@@ -64,44 +60,39 @@ func (ph *PageHandler) CreatePage(c *fiber.Ctx) error {
 	}
 
 	if err := ph.s.Add(&page); err != nil {
-		c.Status(fiber.StatusInternalServerError).
+		return c.Status(fiber.StatusInternalServerError).
 			SendString(err.Error())
-		return err
 	}
 
-	return c.JSON(page)
+	return c.Status(fiber.StatusCreated).JSON(page)
 }
 
 func (ph *PageHandler) DeletePage(c *fiber.Ctx) error {
 	id, err := uuid.Parse(c.Params("id"))
 	if err != nil {
-		c.Status(fiber.StatusBadRequest).
-			SendString(fmt.Errorf("invalid UUIDv4 : %w", err).Error())
-		return err
+		return c.Status(fiber.StatusBadRequest).
+			SendString(err.Error())
 	}
 
 	if err := ph.s.Delete(id); err != nil {
-		c.Status(fiber.StatusInternalServerError).
+		return c.Status(fiber.StatusInternalServerError).
 			SendString(err.Error())
-		return err
 	}
 
-	return nil
+	return c.SendStatus(fiber.StatusNoContent)
 }
 
 func (ph *PageHandler) UpdatePage(c *fiber.Ctx) error {
 	id, err := uuid.Parse(c.Params("id"))
 	if err != nil {
-		c.Status(fiber.StatusBadRequest).
-			SendString(fmt.Errorf("invalid UUIDv4 : %w", err).Error())
-		return err
+		return c.Status(fiber.StatusBadRequest).
+			SendString(err.Error())
 	}
 
-	pageDTO := new(dto.PagePostDTO)
-	if err := c.BodyParser(pageDTO); err != nil {
-		c.Status(fiber.StatusBadGateway).
+	pageDTO := new(dto.PageHttpDTO)
+	if err = c.BodyParser(pageDTO); err != nil {
+		return c.Status(fiber.StatusBadRequest).
 			SendString(err.Error())
-		return err
 	}
 
 	page := model.Page{
@@ -110,11 +101,10 @@ func (ph *PageHandler) UpdatePage(c *fiber.Ctx) error {
 		ID:       id,
 	}
 
-	if err := ph.s.Update(id, &page); err != nil {
-		c.Status(fiber.StatusInternalServerError).
+	if err = ph.s.Update(id, &page); err != nil {
+		return c.Status(fiber.StatusInternalServerError).
 			SendString(err.Error())
-		return err
 	}
 
-	return c.JSON(page)
+	return c.Status(fiber.StatusOK).JSON(page)
 }

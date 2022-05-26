@@ -46,7 +46,6 @@ func (a *Advice) Insert(ctx context.Context, id uuid.UUID, content string) (mode
 }
 
 func (a *Advice) Select(ctx context.Context, id uuid.UUID) (model.Advice, error) {
-	modelTags := []model.Tag{}
 	res, err := a.q.SelectAdvice(ctx, id)
 
 	if err != nil {
@@ -56,7 +55,7 @@ func (a *Advice) Select(ctx context.Context, id uuid.UUID) (model.Advice, error)
 	return model.Advice{
 		ID:      res.ID,
 		Content: res.Content,
-		Tags:    modelTags,
+		Tags:    []model.Tag{},
 	}, nil
 }
 

@@ -25,19 +25,37 @@ func (s *Server) Run() {
 
 func (s *Server) Setup(ps *service.Page, as *service.Advice, ts *service.Tag) {
 	s.app.Get("/healthcheck", func(c *fiber.Ctx) error {
-		c.Status(200).JSON(&fiber.Map{
+		return c.Status(200).JSON(&fiber.Map{
 			"ok": true,
 		})
-		return nil
 	})
 
 	api := s.app.Group("/api/", logger.New())
+	pageAPI := api.Group("/page/")
+	adviceAPI := api.Group("/advice/")
+	tagAPI := api.Group("/tag/")
 
 	ph := handler.NewPageHandler(ps)
+	ah := handler.NewAdviceHandler(as)
+	th := handler.NewTagHandler(ts)
 
-	api.Get("/page/", ph.GetAllPages)
-	api.Get("/page/:id", ph.GetPage)
-	api.Post("/page/", ph.CreatePage)
-	api.Delete("/page/:id", ph.DeletePage)
-	api.Put("/page/:id", ph.UpdatePage)
+	pageAPI.Get("/", ph.GetAllPages)
+	pageAPI.Get("/:id/", ph.GetPage)
+	pageAPI.Post("/", ph.CreatePage)
+	pageAPI.Delete("/:id/", ph.DeletePage)
+	pageAPI.Put("/:id", ph.UpdatePage)
+
+	adviceAPI.Get("/", ah.GetAdvices)
+	adviceAPI.Get("/:id/", ah.GetAdvice)
+	adviceAPI.Post("/", ah.CreateAdvice)
+	adviceAPI.Delete("/:id/", ah.DeleteAdvice)
+	adviceAPI.Put("/:id/", ah.UpdateAdvice)
+	adviceAPI.Get("/tag/:aid/:tid/", ah.Tag)
+	adviceAPI.Get("/untag/:aid/:tid/", ah.Untag)
+
+	tagAPI.Get("/", th.GetAllTags)
+	tagAPI.Get("/:id/", th.GetTag)
+	tagAPI.Post("/", th.CreateTag)
+	tagAPI.Delete("/:id", th.DeleteTag)
+	tagAPI.Get("/:id/advices/", th.ListAllAdvices)
 }

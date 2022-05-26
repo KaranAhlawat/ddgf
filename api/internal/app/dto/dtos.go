@@ -1,13 +1,13 @@
 package dto
 
-type PagePostDTO struct {
+type PageHttpDTO struct {
 	Content string `json:"content"`
 }
 
-type AdvicePostDTO struct {
+type AdviceHttpDTO struct {
 	Content string `json:"content"`
 }
 
-type TagPostDTO struct {
+type TagHttpDTO struct {
 	Tag string `json:"tag"`
 }
