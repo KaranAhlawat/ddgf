@@ -11,10 +11,25 @@ import (
 )
 
 type Querier interface {
+	DeleteAdvice(ctx context.Context, id uuid.UUID) error
 	DeletePage(ctx context.Context, id uuid.UUID) error
+	DeleteTag(ctx context.Context, id uuid.UUID) error
+	DeleteTagFromAdvice(ctx context.Context, arg DeleteTagFromAdviceParams) error
+	InsertAdvice(ctx context.Context, arg InsertAdviceParams) (Advice, error)
+	InsertAdviceTagEntry(ctx context.Context, arg InsertAdviceTagEntryParams) (AdvicesTag, error)
 	InsertPage(ctx context.Context, arg InsertPageParams) (Page, error)
+	InsertTag(ctx context.Context, arg InsertTagParams) (Tag, error)
+	SelectAdvice(ctx context.Context, id uuid.UUID) (Advice, error)
+	SelectAdvices(ctx context.Context) ([]Advice, error)
+	SelectAdvicesForTag(ctx context.Context, tagID uuid.UUID) ([]SelectAdvicesForTagRow, error)
+	SelectAllEntries(ctx context.Context) ([]SelectAllEntriesRow, error)
 	SelectPage(ctx context.Context, id uuid.UUID) (Page, error)
 	SelectPages(ctx context.Context) ([]Page, error)
+	SelectTag(ctx context.Context, id uuid.UUID) (Tag, error)
+	SelectTags(ctx context.Context) ([]Tag, error)
+	SelectTagsForAdvice(ctx context.Context, adviceID uuid.UUID) ([]SelectTagsForAdviceRow, error)
+	SelectTagsForList(ctx context.Context, dollar_1 []uuid.UUID) ([]SelectTagsForListRow, error)
+	UpdateAdvice(ctx context.Context, arg UpdateAdviceParams) error
 	UpdatePage(ctx context.Context, arg UpdatePageParams) error
 }
 

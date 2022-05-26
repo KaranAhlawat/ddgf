@@ -10,8 +10,23 @@ import (
 	"github.com/google/uuid"
 )
 
+type Advice struct {
+	ID      uuid.UUID `json:"id"`
+	Content string    `json:"content"`
+}
+
+type AdvicesTag struct {
+	AdviceID uuid.UUID `json:"advice_id"`
+	TagID    uuid.UUID `json:"tag_id"`
+}
+
 type Page struct {
 	ID       uuid.UUID `json:"id"`
 	Datetime time.Time `json:"datetime"`
 	Content  string    `json:"content"`
+}
+
+type Tag struct {
+	ID  uuid.UUID `json:"id"`
+	Tag string    `json:"tag"`
 }

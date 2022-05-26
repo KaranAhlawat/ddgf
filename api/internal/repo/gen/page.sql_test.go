@@ -1,55 +1,14 @@
 package db
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 	"regexp"
-	"testing"
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
-	"github.com/stretchr/testify/suite"
 )
-
-type Suite struct {
-	suite.Suite
-	DB      *sql.DB
-	mock    sqlmock.Sqlmock
-	querier *Queries
-	page    *Page
-	ctx     context.Context
-}
-
-func (s *Suite) SetupSuite() {
-	var err error
-
-	s.DB, s.mock, err = sqlmock.New()
-	require.NoError(s.T(), err)
-
-	s.querier = New(s.DB)
-
-	id, err := uuid.NewUUID()
-	require.NoError(s.T(), err)
-
-	s.page = &Page{
-		ID:       id,
-		Datetime: time.Now(),
-		Content:  "Testing page with random id",
-	}
-
-	s.ctx = context.Background()
-}
-
-func (s *Suite) AfterTest(_, _ string) {
-	require.NoError(s.T(), s.mock.ExpectationsWereMet())
-}
-
-func TestMain(t *testing.T) {
-	suite.Run(t, new(Suite))
-}
 
 func (s *Suite) TestDeletePage() {
 	query := `-- name: DeletePage :exec
@@ -64,6 +23,7 @@ func (s *Suite) TestDeletePage() {
 		WillReturnError(nil)
 
 	err := s.querier.DeletePage(s.ctx, s.page.ID)
+
 	require.NoError(s.T(), err)
 }
 
@@ -74,7 +34,7 @@ func (s *Suite) TestInsertPage() {
 	RETURNING id, datetime, content
 	`
 
-	rows := s.mock.NewRows([]string{"id", "datetime", "content"}).
+	rows := sqlmock.NewRows([]string{"id", "datetime", "content"}).
 		AddRow(s.page.ID, s.page.Datetime, s.page.Content)
 
 	s.mock.ExpectQuery(regexp.QuoteMeta(query)).
@@ -100,7 +60,7 @@ func (s *Suite) TestSelectPage() {
 	LIMIT 1
 	`
 
-	rows := s.mock.NewRows([]string{"id", "datetime", "content"}).
+	rows := sqlmock.NewRows([]string{"id", "datetime", "content"}).
 		AddRow(s.page.ID, s.page.Datetime, s.page.Content)
 
 	s.mock.ExpectQuery(regexp.QuoteMeta(query)).
@@ -121,7 +81,7 @@ func (s *Suite) TestSelectPages() {
 	ORDER BY "datetime"
 	`
 
-	rows := s.mock.NewRows([]string{"id", "datetime", "content"}).
+	rows := sqlmock.NewRows([]string{"id", "datetime", "content"}).
 		AddRow(s.page.ID, s.page.Datetime, s.page.Content).
 		AddRow(s.page.ID, s.page.Datetime, s.page.Content)
 
@@ -138,7 +98,7 @@ func (s *Suite) TestSelectPages() {
 	}
 }
 
-func (s *Suite) TestErrNoRows() {
+func (s *Suite) TestPageNoRows() {
 	query := `-- name: SelectPages :many
 	SELECT id, datetime, content
 	FROM "pages"
@@ -153,7 +113,7 @@ func (s *Suite) TestErrNoRows() {
 	require.Error(s.T(), err)
 }
 
-func (s *Suite) TestErrRowError() {
+func (s *Suite) TestPageRowError() {
 	query := `-- name: SelectPages :many
 	SELECT id, datetime, content
 	FROM "pages"
@@ -168,6 +128,7 @@ func (s *Suite) TestErrRowError() {
 		WillReturnRows(rows)
 
 	res, err := s.querier.SelectPages(s.ctx)
+
 	require.Error(s.T(), err)
 	require.Nil(s.T(), res)
 }
