@@ -83,8 +83,8 @@ func (a *Advice) Update(id uuid.UUID, advice *model.Advice) error {
 }
 
 // Tag an advice with given tag
-func (a *Advice) AddTag(aid uuid.UUID, tid uuid.UUID) error {
-	err := a.r.InsertTag(a.ctx, aid, tid)
+func (a *Advice) AddTag(adviceID uuid.UUID, tagID uuid.UUID) error {
+	err := a.r.InsertTag(a.ctx, adviceID, tagID)
 	if err != nil {
 		return fmt.Errorf("advice tag: %w", err)
 	}
@@ -92,8 +92,8 @@ func (a *Advice) AddTag(aid uuid.UUID, tid uuid.UUID) error {
 }
 
 // Untag an advice
-func (a *Advice) Untag(aid uuid.UUID, tid uuid.UUID) error {
-	err := a.r.DeleteTag(a.ctx, aid, tid)
+func (a *Advice) Untag(adviceID uuid.UUID, tagID uuid.UUID) error {
+	err := a.r.DeleteTag(a.ctx, adviceID, tagID)
 	if err != nil {
 		return fmt.Errorf("advice untag: %w", err)
 	}

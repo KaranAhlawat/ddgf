@@ -30,10 +30,10 @@ func (p *Page) Remove(ctx context.Context, id uuid.UUID) error {
 	}
 }
 
-func (p *Page) Insert(ctx context.Context, id uuid.UUID, datetime time.Time, content string) (model.Page, error) {
+func (p *Page) Insert(ctx context.Context, id uuid.UUID, date time.Time, content string) (model.Page, error) {
 	_, err := p.q.InsertPage(ctx, db.InsertPageParams{
 		ID:       id,
-		Datetime: datetime,
+		Datetime: date,
 		Content:  content,
 	})
 	if err != nil {
@@ -41,7 +41,7 @@ func (p *Page) Insert(ctx context.Context, id uuid.UUID, datetime time.Time, con
 	} else {
 		return model.Page{
 			ID:       id,
-			Datetime: datetime,
+			Datetime: date,
 			Content:  content,
 		}, nil
 	}
@@ -79,10 +79,10 @@ func (p *Page) SelectAll(ctx context.Context) ([]model.Page, error) {
 	}
 }
 
-func (p *Page) Update(ctx context.Context, content string, datetime time.Time, id uuid.UUID) error {
+func (p *Page) Update(ctx context.Context, content string, date time.Time, id uuid.UUID) error {
 	err := p.q.UpdatePage(ctx, db.UpdatePageParams{
 		Content:  content,
-		Datetime: datetime,
+		Datetime: date,
 		ID:       id,
 	})
 	if err != nil {

@@ -128,10 +128,10 @@ func (a *Advice) SelectAllTags(ctx context.Context) (map[uuid.UUID][]model.Tag, 
 	return gtmap, nil
 }
 
-func (a *Advice) InsertTag(ctx context.Context, a_id uuid.UUID, t_id uuid.UUID) error {
+func (a *Advice) InsertTag(ctx context.Context, adviceID uuid.UUID, tagID uuid.UUID) error {
 	_, err := a.q.InsertAdviceTagEntry(ctx, db.InsertAdviceTagEntryParams{
-		AdviceID: a_id,
-		TagID:    t_id,
+		AdviceID: adviceID,
+		TagID:    tagID,
 	})
 
 	if err != nil {
@@ -141,10 +141,10 @@ func (a *Advice) InsertTag(ctx context.Context, a_id uuid.UUID, t_id uuid.UUID) 
 	return nil
 }
 
-func (a *Advice) DeleteTag(ctx context.Context, a_id uuid.UUID, t_id uuid.UUID) error {
+func (a *Advice) DeleteTag(ctx context.Context, adviceID uuid.UUID, tagID uuid.UUID) error {
 	err := a.q.DeleteTagFromAdvice(ctx, db.DeleteTagFromAdviceParams{
-		AdviceID: a_id,
-		TagID:    t_id,
+		AdviceID: adviceID,
+		TagID:    tagID,
 	})
 
 	if err != nil {
