@@ -37,4 +37,7 @@ func (s *Server) Setup(ps *service.Page, as *service.Advice, ts *service.Tag) {
 
 	api.Get("/page/", ph.GetAllPages)
 	api.Get("/page/:id", ph.GetPage)
+	api.Post("/page/", ph.CreatePage)
+	api.Delete("/page/:id", ph.DeletePage)
+	api.Put("/page/:id", ph.UpdatePage)
 }
