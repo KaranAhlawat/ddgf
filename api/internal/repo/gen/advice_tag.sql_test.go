@@ -1,10 +1,10 @@
 package db
 
 import (
-	"fmt"
 	"regexp"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
 
@@ -89,18 +89,16 @@ func (s *Suite) TestSelectAdvicesForTag() {
 
 func (s *Suite) TestSelectAllEntries() {
 	query := `-- name: SelectAllEntries :many
-	SELECT
-			"at"."advice_id",
-			"at"."tag_id",
-			"t"."tag"
-	FROM
-			"advices_tags" "at"
-			JOIN "tags" "t" ON "at"."tag_id" = "t"."tag"
-	GROUP BY
-			"at"."advice_id"
-	ORDER BY
-			"at"."advice_id"
-	`
+    SELECT
+        "at"."advice_id",
+        "at"."tag_id",
+        "t"."tag"
+    FROM
+        "advices_tags" "at"
+        JOIN "tags" "t" ON "at"."tag_id" = "t"."id"
+    ORDER BY
+        "at"."advice_id"
+    `
 
 	rows := sqlmock.NewRows([]string{"advice_id", "tag_id", "tag"}).
 		AddRow(s.advice.ID, s.tag.ID, s.tag.Tag).
@@ -115,7 +113,6 @@ func (s *Suite) TestSelectAllEntries() {
 	require.NotNil(s.T(), res)
 
 	for _, adviceTag := range res {
-		fmt.Printf("\nAdvice tag: %v", adviceTag)
 		require.Equal(s.T(), adviceTag.AdviceID, s.advice.ID)
 		require.Equal(s.T(), adviceTag.TagID, s.tag.ID)
 		require.Equal(s.T(), adviceTag.Tag, s.tag.Tag)
@@ -150,5 +147,39 @@ func (s *Suite) TestSelectTagsForAdvice() {
 	for _, tag := range res {
 		require.EqualValues(s.T(), s.tag.ID, tag.TagID)
 		require.EqualValues(s.T(), s.tag.Tag, tag.Tag)
+	}
+}
+
+func (s *Suite) TestSelectTagsForList() {
+	query := `-- name: SelectTagsForList :many
+    SELECT
+        "at"."advice_id",
+        "at"."tag_id",
+        "t"."tag"
+    FROM
+        "advices_tags" "at"
+        JOIN "tags" "t" ON "at"."tag_id" = "t"."id"
+    WHERE
+        "at"."advice_id" = ANY($1::uuid[])
+    `
+
+	rows := sqlmock.NewRows([]string{"advice_id", "tag_id", "tag"}).
+		AddRow(s.advice.ID, s.tag.ID, s.tag.Tag).
+		AddRow(s.advice.ID, s.tag.ID, s.tag.Tag).
+		AddRow(s.advice.ID, s.tag.ID, s.tag.Tag)
+
+	s.mock.ExpectQuery(regexp.QuoteMeta(query)).
+		WithArgs(sqlmock.AnyArg()).
+		WillReturnRows(rows)
+
+	res, err := s.querier.SelectTagsForList(s.ctx, []uuid.UUID{s.advice.ID})
+
+	require.NoError(s.T(), err)
+	require.NotNil(s.T(), res)
+
+	for _, row := range res {
+		require.Equal(s.T(), row.AdviceID, s.advice.ID)
+		require.Equal(s.T(), row.TagID, s.tag.ID)
+		require.Equal(s.T(), row.Tag, s.tag.Tag)
 	}
 }
