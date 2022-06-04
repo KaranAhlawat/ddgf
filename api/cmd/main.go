@@ -19,6 +19,7 @@ func main() {
 		println(err.Error())
 		return
 	}
+	defer dbConf.Close()
 
 	pageRepo := repo.NewPage(dbConf)
 	adviceRepo := repo.NewAdvice(dbConf)
